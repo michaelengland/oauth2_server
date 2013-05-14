@@ -14,5 +14,5 @@ Gem::Specification.new do |gem|
   gem.test_files = gem.files.grep(%r{^(test|spec|features)/})
   gem.name = 'oauth2_server'
   gem.require_paths = %w(lib)
-  gem.version = Oauth2Server::VERSION
+  gem.version = Oauth2Server::Version
 end
