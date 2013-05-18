@@ -1,3 +1,4 @@
+require 'oauth2_server/errors'
 require 'oauth2_server/configuration'
 require 'oauth2_server/entities'
 
