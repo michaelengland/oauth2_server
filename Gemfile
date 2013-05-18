@@ -2,7 +2,8 @@ source 'https://rubygems.org'
 
 gemspec
 
-group :test do
+group :development, :test do
+  gem 'rake'
   gem 'rspec'
   gem 'spork'
   gem 'guard'

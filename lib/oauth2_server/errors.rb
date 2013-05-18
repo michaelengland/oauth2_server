@@ -22,5 +22,9 @@ module Oauth2Server
         @options[:description] || self.class.description
       end
     end
+
+    class InvalidClient < Oauth2Error
+      self.type = :invalid_client
+    end
   end
 end
