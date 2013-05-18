@@ -1,7 +1,7 @@
 require File.expand_path('../lib/oauth2_server/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.add_development_dependency 'rspec'
+  gem.add_dependency 'rack'
 
   gem.authors = %w(Michael England)
   gem.email = %w(mg.england@gmail.com)
