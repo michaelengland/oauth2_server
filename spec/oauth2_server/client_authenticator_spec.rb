@@ -5,8 +5,10 @@ describe Oauth2Server::ClientAuthenticator do
   let(:request) { Rack::Request.new(env) }
   let(:client) { Oauth2Server::Entities::Client.new('Test Client', 'foo', 'bar') }
   let(:client_repository) { stub('ClientRepository') }
+  let(:retriever) { stub('Retriever', authorization_header: nil) }
 
   before do
+    Oauth2Server::AuthorizationHeaderRetriever.stub(:new).with(request).and_return(retriever)
     client_repository.stub(:find_client_by_id_and_secret).with('foo', 'bar').and_return(client)
     client_repository.stub(:find_client_by_id_and_secret).with('totally', 'wrong')
   end
@@ -58,42 +60,41 @@ describe Oauth2Server::ClientAuthenticator do
           end
         end
 
-        %w(
-          HTTP_AUTHORIZATION
-          X-HTTP_AUTHORIZATION
-          X_HTTP_AUTHORIZATION
-          REDIRECT_X_HTTP_AUTHORIZATION
-        ).each do |auth_header|
-          context "when #{auth_header} header set with incorrect info" do
-            let(:env) { Rack::MockRequest.env_for('/').tap { |env|
-              env[auth_header] = 'Basic dG90YWxseTp3cm9uZw=='
-            } }
+        context 'when authorization header set with incorrect info' do
+          let(:env) { Rack::MockRequest.env_for('/') }
 
-            specify { expect { subject.public_send(method) }.to raise_error(
-              Oauth2Server::Errors::InvalidClient,
-              'Your client credentials did not match'
-            ) }
+          before do
+            retriever.stub(:authorization_header).and_return('Basic dG90YWxseTp3cm9uZw==')
           end
 
-          context "when #{auth_header} header not set with basic auth" do
-            let(:env) { Rack::MockRequest.env_for('/').tap { |env|
-              env[auth_header] = 'Absolute nonsense'
-            } }
+          specify { expect { subject.public_send(method) }.to raise_error(
+            Oauth2Server::Errors::InvalidClient,
+            'Your client credentials did not match'
+          ) }
+        end
 
-            specify { expect { subject.public_send(method) }.to raise_error(
-              Oauth2Server::Errors::InvalidClient,
-              'Your client credentials did not match'
-            ) }
+        context 'when authorization header not set with basic auth' do
+          let(:env) { Rack::MockRequest.env_for('/') }
+
+          before do
+            retriever.stub(:authorization_header).and_return('Absolute nonsense')
           end
 
-          context "when #{auth_header} header set with correct info" do
-            let(:env) { Rack::MockRequest.env_for('/').tap { |env|
-              env[auth_header] = 'Basic Zm9vOmJhcg=='
-            } }
+          specify { expect { subject.public_send(method) }.to raise_error(
+            Oauth2Server::Errors::InvalidClient,
+            'Your client credentials did not match'
+          ) }
+        end
 
-            it 'returns successfully retrieved client' do
-              expect(authenticator.public_send(method)).to eql(client)
-            end
+        context 'when authorization header set with correct info' do
+          let(:env) { Rack::MockRequest.env_for('/') }
+
+          before do
+            retriever.stub(:authorization_header).and_return('Basic Zm9vOmJhcg==')
+          end
+
+          it 'returns successfully retrieved client' do
+            expect(authenticator.public_send(method)).to eql(client)
           end
         end
       end

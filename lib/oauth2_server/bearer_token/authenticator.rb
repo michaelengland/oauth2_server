@@ -1,3 +1,4 @@
+require 'rack'
 require 'active_support/core_ext/object/blank'
 
 module Oauth2Server
@@ -61,10 +62,11 @@ module Oauth2Server
       end
 
       def authorization_header
-        request.env['HTTP_AUTHORIZATION'] ||
-          request.env['X-HTTP_AUTHORIZATION'] ||
-          request.env['X_HTTP_AUTHORIZATION'] ||
-          request.env['REDIRECT_X_HTTP_AUTHORIZATION']
+        authorization_header_retriever.authorization_header
+      end
+
+      def authorization_header_retriever
+        AuthorizationHeaderRetriever.new(request)
       end
 
       def oauth_token_param

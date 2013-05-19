@@ -6,52 +6,47 @@ describe Oauth2Server::BearerToken::Authenticator do
   let(:token) { Oauth2Server::Entities::Token.new(client, 'password', 'foobar') }
   let(:client) { Oauth2Server::Entities::Client.new('Test Client', 'foo', 'bar') }
   let(:token_repository) { stub('TokenRepository') }
+  let(:retriever) { stub('Retriever', authorization_header: nil) }
 
   before do
+    Oauth2Server::AuthorizationHeaderRetriever.stub(:new).with(request).and_return(retriever)
     token_repository.stub(:find_token_by_access).with('foobar').and_return(token)
     token_repository.stub(:find_token_by_access).with('totallywrong')
   end
 
   shared_examples_for 'authenticates bearer tokens' do
     [:authenticate!, :token].each do |method|
-      %w(
-        HTTP_AUTHORIZATION
-        X-HTTP_AUTHORIZATION
-        X_HTTP_AUTHORIZATION
-        REDIRECT_X_HTTP_AUTHORIZATION
-      ).each do |auth_header|
-        context "when #{auth_header} header set with non-bearer token" do
+      context 'when authorization header set with non-bearer token' do
+        let(:env) { Rack::MockRequest.env_for('/') }
+
+        before do
+          retriever.stub(:authorization_header).and_return('Absolute nonsense')
+        end
+
+        specify { expect { authenticator.public_send(method) }.to raise_error(Oauth2Server::Errors::TokenMissing) }
+      end
+
+      %w(Bearer OAuth).each do |auth_prefix|
+        context "when authorization header set to genuine Bearer token with #{auth_prefix} prefix" do
           let(:env) { Rack::MockRequest.env_for('/') }
 
           before do
-            env[auth_header] = 'Absolute nonsense'
+            retriever.stub(:authorization_header).and_return("#{auth_prefix} foobar")
           end
 
-          specify { expect { authenticator.public_send(method) }.to raise_error(Oauth2Server::Errors::TokenMissing) }
+          it 'returns successfully retrieved token' do
+            expect(authenticator.public_send(method)).to eql(token)
+          end
         end
 
-        %w(Bearer OAuth).each do |auth_prefix|
-          context "when #{auth_header} header set to genuine Bearer token with #{auth_prefix} prefix" do
-            let(:env) { Rack::MockRequest.env_for('/') }
+        context 'when authorization header set to incorrect info' do
+          let(:env) { Rack::MockRequest.env_for('/') }
 
-            before do
-              env[auth_header] = "#{auth_prefix} foobar"
-            end
-
-            it 'returns successfully retrieved token' do
-              expect(authenticator.public_send(method)).to eql(token)
-            end
+          before do
+            retriever.stub(:authorization_header).and_return("#{auth_prefix} totallywrong")
           end
 
-          context "when #{auth_header} header set to incorrect info" do
-            let(:env) { Rack::MockRequest.env_for('/') }
-
-            before do
-              env[auth_header] = "#{auth_prefix} totallywrong"
-            end
-
-            specify { expect { authenticator.public_send(method) }.to raise_error(Oauth2Server::Errors::InvalidToken) }
-          end
+          specify { expect { authenticator.public_send(method) }.to raise_error(Oauth2Server::Errors::InvalidToken) }
         end
       end
 

@@ -52,10 +52,11 @@ module Oauth2Server
     end
 
     def authorization_header
-      request.env['HTTP_AUTHORIZATION'] ||
-        request.env['X-HTTP_AUTHORIZATION'] ||
-        request.env['X_HTTP_AUTHORIZATION'] ||
-        request.env['REDIRECT_X_HTTP_AUTHORIZATION']
+      authorization_header_retriever.authorization_header
+    end
+
+    def authorization_header_retriever
+      AuthorizationHeaderRetriever.new(request)
     end
 
     def client_info_from_header
