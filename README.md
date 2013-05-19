@@ -1,4 +1,4 @@
-# OAuth2Server
+# OAuth2Server [![Build Status](https://travis-ci.org/michaelengland/oauth2_server.png)](https://travis-ci.org/michaelengland/oauth2_server) [![Code Climate](https://codeclimate.com/github/michaelengland/oauth2_server.png)](https://codeclimate.com/github/michaelengland/oauth2_server) [![Dependency Status](https://gemnasium.com/michaelengland/oauth2_server.png)](https://gemnasium.com/michaelengland/oauth2_server)
 
 Modularised, extendable OAuth2 server implementation.
 Adheres to as many variants of the OAuth2 draft/client as possible.
