@@ -26,5 +26,14 @@ module Oauth2Server
     class InvalidClient < Oauth2Error
       self.type = :invalid_client
     end
+
+    class TokenMissing < Oauth2Error
+      self.type = :token_missing
+      self.description = 'You must provide a valid oauth token'
+    end
+
+    class InvalidToken < Oauth2Error
+      self.type = :invalid_token
+    end
   end
 end

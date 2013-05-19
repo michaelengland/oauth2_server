@@ -65,26 +65,28 @@ module Oauth2Server
     end
 
     def basic_encoded_info
-      @_basic_encoded_info ||= authorization_header.slice(%r{Basic (.*)}, 1)
+      authorization_header.slice(%r{Basic (.*)}, 1)
     end
 
     def client_for_id_and_secret(id, secret)
+      retrieve_client_for_id_and_secret(id, secret) || raise_invalid_info_error
+    end
+
+    def retrieve_client_for_id_and_secret(id, secret)
       client_repositories.inject(nil) { |client, repository|
         client || repository.find_client_by_id_and_secret(id, secret)
-      } || raise_invalid_info_error
+      }
     end
 
     def client_repositories
-      @_client_repositories ||= begin
-        if options.has_key?(:client_repository)
-          Array(options[:client_repository])
-        elsif options.has_key?(:client_repositories)
-          options[:client_repositories]
-        elsif options.has_key?(:configuration)
-          options[:configuration].registered_client_repositories
-        else
-          Oauth2Server.configuration.registered_client_repositories
-        end
+      if options.has_key?(:client_repository)
+        Array(options[:client_repository])
+      elsif options.has_key?(:client_repositories)
+        options[:client_repositories]
+      elsif options.has_key?(:configuration)
+        options[:configuration].registered_client_repositories
+      else
+        Oauth2Server.configuration.registered_client_repositories
       end
     end
 
