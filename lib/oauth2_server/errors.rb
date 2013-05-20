@@ -23,6 +23,19 @@ module Oauth2Server
       end
     end
 
+    class InsufficientScope < Oauth2Error
+      self.type = :insufficient_scope
+      self.status = :forbidden
+      self.description = 'The request requires higher privileges than provided by the access token'
+
+      attr_reader :scope
+
+      def initialize(scope, options = {})
+        @scope = scope
+        super(options)
+      end
+    end
+
     class InvalidClient < Oauth2Error
       self.type = :invalid_client
     end

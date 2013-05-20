@@ -19,8 +19,11 @@ module Oauth2Server
       end
 
       def scopes
-        options[:scopes]
+        options[:scopes] || Set.new
       end
+
+      private
+      attr_reader :options
     end
   end
 end
