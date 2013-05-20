@@ -1,5 +1,7 @@
 module Oauth2Server
   class Configuration
+    attr_accessor :realm
+
     def registered_client_repositories
       @_registered_client_repositories ||= []
     end
