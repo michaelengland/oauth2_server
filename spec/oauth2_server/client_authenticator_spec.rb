@@ -8,8 +8,8 @@ describe Oauth2Server::ClientAuthenticator do
   let(:retriever) { stub('Retriever', authorization_header: nil) }
 
   before do
-    Oauth2Server::AuthorizationHeaderRetriever.stub(:new).with(request).and_return(retriever)
-    client_repository.stub(:find_client_by_id_and_secret).with('foo', 'bar').and_return(client)
+    Oauth2Server::AuthorizationHeaderRetriever.stub(:new).with(request) { retriever }
+    client_repository.stub(:find_client_by_id_and_secret).with('foo', 'bar') { client }
     client_repository.stub(:find_client_by_id_and_secret).with('totally', 'wrong')
   end
 
@@ -64,7 +64,7 @@ describe Oauth2Server::ClientAuthenticator do
           let(:env) { Rack::MockRequest.env_for('/') }
 
           before do
-            retriever.stub(:authorization_header).and_return('Basic dG90YWxseTp3cm9uZw==')
+            retriever.stub(:authorization_header) { 'Basic dG90YWxseTp3cm9uZw==' }
           end
 
           specify { expect { subject.public_send(method) }.to raise_error(
@@ -77,7 +77,7 @@ describe Oauth2Server::ClientAuthenticator do
           let(:env) { Rack::MockRequest.env_for('/') }
 
           before do
-            retriever.stub(:authorization_header).and_return('Absolute nonsense')
+            retriever.stub(:authorization_header) { 'Absolute nonsense' }
           end
 
           specify { expect { subject.public_send(method) }.to raise_error(
@@ -90,7 +90,7 @@ describe Oauth2Server::ClientAuthenticator do
           let(:env) { Rack::MockRequest.env_for('/') }
 
           before do
-            retriever.stub(:authorization_header).and_return('Basic Zm9vOmJhcg==')
+            retriever.stub(:authorization_header) { 'Basic Zm9vOmJhcg==' }
           end
 
           it 'returns successfully retrieved client' do
@@ -130,7 +130,7 @@ describe Oauth2Server::ClientAuthenticator do
 
     before do
       configuration.register_client_repository(client_repository)
-      Oauth2Server.stub(:configuration).and_return(configuration)
+      Oauth2Server.stub(:configuration) { configuration }
     end
 
     it_behaves_like 'authenticates clients'

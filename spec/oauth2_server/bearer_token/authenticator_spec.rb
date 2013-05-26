@@ -8,8 +8,8 @@ describe Oauth2Server::BearerToken::Authenticator do
   let(:retriever) { stub('Retriever', authorization_header: nil) }
 
   before do
-    Oauth2Server::AuthorizationHeaderRetriever.stub(:new).with(request).and_return(retriever)
-    token_repository.stub(:find_token_by_access).with('foobar').and_return(token)
+    Oauth2Server::AuthorizationHeaderRetriever.stub(:new).with(request) { retriever }
+    token_repository.stub(:find_token_by_access).with('foobar') { token }
     token_repository.stub(:find_token_by_access).with('totallywrong')
   end
 
@@ -19,7 +19,7 @@ describe Oauth2Server::BearerToken::Authenticator do
         let(:env) { Rack::MockRequest.env_for('/') }
 
         before do
-          retriever.stub(:authorization_header).and_return('Absolute nonsense')
+          retriever.stub(:authorization_header) { 'Absolute nonsense' }
         end
 
         specify { expect { authenticator.public_send(method) }.to raise_error(Oauth2Server::Errors::TokenMissing) }
@@ -30,7 +30,7 @@ describe Oauth2Server::BearerToken::Authenticator do
           let(:env) { Rack::MockRequest.env_for('/') }
 
           before do
-            retriever.stub(:authorization_header).and_return("#{auth_prefix} foobar")
+            retriever.stub(:authorization_header) { "#{auth_prefix} foobar" }
           end
 
           it 'returns successfully retrieved token' do
@@ -42,7 +42,7 @@ describe Oauth2Server::BearerToken::Authenticator do
           let(:env) { Rack::MockRequest.env_for('/') }
 
           before do
-            retriever.stub(:authorization_header).and_return("#{auth_prefix} totallywrong")
+            retriever.stub(:authorization_header) { "#{auth_prefix} totallywrong" }
           end
 
           specify { expect { authenticator.public_send(method) }.to raise_error(Oauth2Server::Errors::InvalidToken) }
@@ -114,7 +114,7 @@ describe Oauth2Server::BearerToken::Authenticator do
 
     before do
       configuration.register_token_repository(token_repository)
-      Oauth2Server.stub(:configuration).and_return(configuration)
+      Oauth2Server.stub(:configuration) { configuration }
     end
 
     it_behaves_like 'authenticates bearer tokens'

@@ -1,6 +1,11 @@
 module Oauth2Server
   class Configuration
+    attr_writer :token_length
     attr_accessor :realm
+
+    def token_length
+      @token_length || 32
+    end
 
     def registered_client_repositories
       @_registered_client_repositories ||= []

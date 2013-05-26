@@ -62,7 +62,7 @@ describe Oauth2Server::BearerToken::AuthenticationHeaderBuilder do
 
     before do
       configuration.realm = 'Test Realm'
-      Oauth2Server.stub(:configuration).and_return(configuration)
+      Oauth2Server.stub(:configuration) { configuration }
     end
 
     it_behaves_like 'builds authentication headers'
