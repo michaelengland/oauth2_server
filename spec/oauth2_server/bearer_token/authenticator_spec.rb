@@ -3,8 +3,7 @@ require 'spec_helper'
 describe Oauth2Server::BearerToken::Authenticator do
   subject(:authenticator) { described_class.new(request, options) }
   let(:request) { Rack::Request.new(env) }
-  let(:token) { Oauth2Server::Entities::Token.new(client, 'password', 'foobar') }
-  let(:client) { Oauth2Server::Entities::Client.new('Test Client', 'foo', 'bar') }
+  let(:token) { FactoryGirl.build(:token) }
   let(:token_repository) { stub('TokenRepository') }
   let(:retriever) { stub('Retriever', authorization_header: nil) }
 

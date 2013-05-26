@@ -1,3 +1,5 @@
+require 'set'
+
 module Oauth2Server
   module Entities
     class Token
