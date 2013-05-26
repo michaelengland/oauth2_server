@@ -48,5 +48,14 @@ module Oauth2Server
     class InvalidToken < Oauth2Error
       self.type = :invalid_token
     end
+
+    class InvalidGrant < Oauth2Error
+      self.type = :invalid_grant
+    end
+
+    class InvalidRequest < Oauth2Error
+      self.type = :invalid_request
+      self.status = :bad_request
+    end
   end
 end

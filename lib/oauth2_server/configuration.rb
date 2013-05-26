@@ -22,5 +22,13 @@ module Oauth2Server
     def register_token_repository(token_repository)
       registered_token_repositories << token_repository
     end
+
+    def registered_resource_owner_repositories
+      @_registered_resource_owner_repositories ||= []
+    end
+
+    def register_resource_owner_repository(resource_owner_repository)
+      registered_resource_owner_repositories << resource_owner_repository
+    end
   end
 end

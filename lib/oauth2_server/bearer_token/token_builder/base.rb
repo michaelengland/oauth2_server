@@ -1,3 +1,4 @@
+require 'rack'
 require 'securerandom'
 
 module Oauth2Server
@@ -8,10 +9,6 @@ module Oauth2Server
           @client = client
           @request = request
           @options = options
-        end
-
-        def token
-          Entities::Token.new(client, grant_type, access, token_options)
         end
 
         protected
