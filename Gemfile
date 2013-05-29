@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 group :development, :test do
+  gem 'coveralls', require: false
   gem 'factory_girl'
   gem 'rake'
   gem 'rspec'

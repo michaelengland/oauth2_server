@@ -1,5 +1,7 @@
 require 'rubygems'
 require 'spork'
+require 'coveralls'
+Coveralls.wear!
 
 Spork.prefork do
   require 'factory_girl'
