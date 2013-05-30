@@ -17,29 +17,21 @@ module Oauth2Server
         private
 
         def resource_owner
-          retriever_resource_owner || raise_invalid_grant_error
+          retrieve_resource_owner || raise_invalid_grant_error
         end
 
-        def retriever_resource_owner
+        def retrieve_resource_owner
           resource_owner_repositories.inject(nil) { |resource_owner, repository|
-            resource_owner || repository.find_resource_owner_by_username_and_password(username, password)
+            resource_owner || repository.find_by_username_and_password(username, password)
           }
         end
 
         def username
-          param('username')
+          required_param('username')
         end
 
         def password
-          param('password')
-        end
-
-        def param(key)
-          if request.params[key].present?
-            request.params[key]
-          else
-            raise Errors::InvalidRequest.new(description: "Missing #{key}")
-          end
+          required_param('password')
         end
 
         def resource_owner_repositories
@@ -52,10 +44,6 @@ module Oauth2Server
           else
             Oauth2Server.configuration.registered_resource_owner_repositories
           end
-        end
-
-        def raise_invalid_grant_error
-          raise Errors::InvalidGrant
         end
       end
     end

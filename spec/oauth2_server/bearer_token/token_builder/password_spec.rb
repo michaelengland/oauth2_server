@@ -8,8 +8,8 @@ describe Oauth2Server::BearerToken::TokenBuilder::Password do
   let(:resource_owner) { stub('ResourceOwner') }
 
   before do
-    resource_owner_repository.stub(:find_resource_owner_by_username_and_password).with('foo', 'bar') { resource_owner }
-    resource_owner_repository.stub(:find_resource_owner_by_username_and_password).with('totally', 'wrong')
+    resource_owner_repository.stub(:find_by_username_and_password).with('foo', 'bar') { resource_owner }
+    resource_owner_repository.stub(:find_by_username_and_password).with('totally', 'wrong')
     SecureRandom.stub(:hex).with(10) { 'ABC123' }
   end
 

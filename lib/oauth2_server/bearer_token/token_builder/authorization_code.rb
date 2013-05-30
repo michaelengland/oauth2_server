@@ -37,19 +37,11 @@ module Oauth2Server
         end
 
         def code
-          param('code')
+          required_param('code')
         end
 
         def redirect_uri
-          param('redirect_uri')
-        end
-
-        def param(key)
-          if request.params[key].present?
-            request.params[key]
-          else
-            raise_missing_param_error(key)
-          end
+          required_param('redirect_uri')
         end
 
         def authorization_grant_repositories
@@ -64,16 +56,8 @@ module Oauth2Server
           end
         end
 
-        def raise_missing_param_error(key)
-          raise Errors::InvalidRequest.new(description: "Missing #{key}")
-        end
-
         def raise_redirect_uri_mismatch_error
           raise_invalid_grant_error('Redirect uri does not match')
-        end
-
-        def raise_invalid_grant_error(description = nil)
-          raise Errors::InvalidGrant.new(description: description)
         end
       end
     end

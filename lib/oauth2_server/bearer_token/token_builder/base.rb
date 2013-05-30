@@ -18,6 +18,18 @@ module Oauth2Server
           SecureRandom.hex(token_length)
         end
 
+        def required_param(key)
+          if request.params[key].present?
+            request.params[key]
+          else
+            raise_missing_param_error(key)
+          end
+        end
+
+        def raise_invalid_grant_error(description = nil)
+          raise Errors::InvalidGrant.new(description: description)
+        end
+
         private
 
         def access
@@ -32,6 +44,10 @@ module Oauth2Server
           else
             Oauth2Server.configuration.token_length
           end
+        end
+
+        def raise_missing_param_error(key)
+          raise Errors::InvalidRequest.new(description: "Missing #{key}")
         end
       end
     end
