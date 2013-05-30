@@ -14,14 +14,14 @@ module Oauth2Server
         protected
         attr_reader :client, :request, :options
 
-        def generate_code
+        def generate_hex
           SecureRandom.hex(token_length)
         end
 
         private
 
         def access
-          generate_code
+          generate_hex
         end
 
         def token_length

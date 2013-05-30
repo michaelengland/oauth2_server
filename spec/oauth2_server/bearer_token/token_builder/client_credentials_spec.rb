@@ -6,7 +6,7 @@ describe Oauth2Server::BearerToken::TokenBuilder::ClientCredentials do
   let(:request) { stub('request') }
 
   before do
-    SecureRandom.stub(:hex).with(32) { 'ABC123' }
+    SecureRandom.stub(:hex).with(10) { 'ABC123' }
   end
 
   shared_examples_for 'builds client_credentials tokens' do
@@ -23,7 +23,7 @@ describe Oauth2Server::BearerToken::TokenBuilder::ClientCredentials do
     end
 
     it 'sets the refresh' do
-      expect(client_credentials.token.access).to eql('ABC123')
+      expect(client_credentials.token.refresh).to eql('ABC123')
     end
 
     it 'does not set the resource_owner' do
@@ -32,7 +32,7 @@ describe Oauth2Server::BearerToken::TokenBuilder::ClientCredentials do
   end
 
   context 'when token_length given' do
-    let(:options) { {token_length: 32} }
+    let(:options) { {token_length: 10} }
 
     it_behaves_like 'builds client_credentials tokens'
   end
@@ -42,7 +42,7 @@ describe Oauth2Server::BearerToken::TokenBuilder::ClientCredentials do
     let(:configuration) { Oauth2Server::Configuration.new }
 
     before do
-      configuration.token_length = 32
+      configuration.token_length = 10
     end
 
     it_behaves_like 'builds client_credentials tokens'
@@ -53,7 +53,7 @@ describe Oauth2Server::BearerToken::TokenBuilder::ClientCredentials do
     let(:configuration) { Oauth2Server::Configuration.new }
 
     before do
-      configuration.token_length = 32
+      configuration.token_length = 10
       Oauth2Server.stub(:configuration) { configuration }
     end
 

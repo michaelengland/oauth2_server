@@ -51,7 +51,7 @@ describe Oauth2Server::BearerToken::TokenBuilder::Password do
       end
 
       it 'sets the refresh' do
-        expect(password.token.access).to eql('ABC123')
+        expect(password.token.refresh).to eql('ABC123')
       end
 
       it 'sets the resource_owner' do

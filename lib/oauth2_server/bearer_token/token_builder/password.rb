@@ -8,8 +8,8 @@ module Oauth2Server
           Entities::Token.new(
             client,
             'password',
-            generate_code,
-            refresh: generate_code,
+            generate_hex,
+            refresh: generate_hex,
             resource_owner: resource_owner
           )
         end

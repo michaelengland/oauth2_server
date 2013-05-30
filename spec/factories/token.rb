@@ -8,18 +8,18 @@ FactoryGirl.define do
   end
 
   trait :implicit_grant do
-    resource_owner 'Bob'
+    resource_owner stub('ResourceOwner')
     grant_type 'implicit_grant'
   end
 
   trait :password do
-    resource_owner 'Bob'
+    resource_owner stub('ResourceOwner')
     grant_type 'password'
     refresh 'UniqueRefresh'
   end
 
   trait :authorization_code do
-    resource_owner 'Bob'
+    resource_owner stub('ResourceOwner')
     grant_type 'authorization_code'
     refresh 'UniqueRefresh'
   end

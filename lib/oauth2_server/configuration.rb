@@ -23,6 +23,14 @@ module Oauth2Server
       registered_token_repositories << token_repository
     end
 
+    def registered_authorization_grant_repositories
+      @_registered_authorization_grant_repositories ||= []
+    end
+
+    def register_authorization_grant_repository(authorization_grant_repository)
+      registered_authorization_grant_repositories << authorization_grant_repository
+    end
+
     def registered_resource_owner_repositories
       @_registered_resource_owner_repositories ||= []
     end
