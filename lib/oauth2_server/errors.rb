@@ -57,5 +57,11 @@ module Oauth2Server
       self.type = :invalid_request
       self.status = :bad_request
     end
+
+    class UnsupportedGrantType < Oauth2Error
+      self.type = :unsupported_grant_type
+      self.status = :bad_request
+      self.description = 'The authorization grant type is not supported'
+    end
   end
 end
