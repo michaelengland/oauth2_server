@@ -1,14 +1,14 @@
 module Oauth2Server
   module BearerToken
-    module TokenBuilder
+    module Builder
       class Factory
-        def initialize(client, request, options)
+        def initialize(client, request, options = {})
           @client = client
           @request = request
           @options = options
         end
 
-        def token_builder
+        def builder
           case grant_type
             when 'client_credentials'
               ClientCredentials.new(client, request, options)

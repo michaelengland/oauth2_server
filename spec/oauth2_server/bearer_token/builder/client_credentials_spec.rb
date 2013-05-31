@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Oauth2Server::BearerToken::TokenBuilder::ClientCredentials do
+describe Oauth2Server::BearerToken::Builder::ClientCredentials do
   subject(:client_credentials) { described_class.new(client, request, options) }
   let(:client) { FactoryGirl.build(:client) }
   let(:request) { stub('request') }

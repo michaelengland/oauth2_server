@@ -3,7 +3,7 @@ require 'securerandom'
 
 module Oauth2Server
   module BearerToken
-    module TokenBuilder
+    module Builder
       class Base
         def initialize(client, request, options = {})
           @client = client

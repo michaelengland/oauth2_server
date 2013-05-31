@@ -1,6 +1,6 @@
 module Oauth2Server
   module BearerToken
-    module TokenBuilder
+    module Builder
       class ClientCredentials < Base
         def token
           Entities::Token.new(

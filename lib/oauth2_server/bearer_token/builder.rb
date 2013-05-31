@@ -1,0 +1,6 @@
+require 'oauth2_server/bearer_token/builder/base'
+require 'oauth2_server/bearer_token/builder/client_credentials'
+require 'oauth2_server/bearer_token/builder/password'
+require 'oauth2_server/bearer_token/builder/authorization_code'
+require 'oauth2_server/bearer_token/builder/refresh_token'
+require 'oauth2_server/bearer_token/builder/factory'

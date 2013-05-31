@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Oauth2Server::BearerToken::TokenBuilder::Password do
+describe Oauth2Server::BearerToken::Builder::Password do
   subject(:password) { described_class.new(client, request, options) }
   let(:client) { FactoryGirl.build(:client) }
   let(:request) { Rack::Request.new(env) }

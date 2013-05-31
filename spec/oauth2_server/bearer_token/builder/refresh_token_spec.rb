@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Oauth2Server::BearerToken::TokenBuilder::RefreshToken do
+describe Oauth2Server::BearerToken::Builder::RefreshToken do
   subject(:refresh_token) { described_class.new(client, request, options) }
   let(:client) { FactoryGirl.build(:client) }
   let(:request) { Rack::Request.new(env) }

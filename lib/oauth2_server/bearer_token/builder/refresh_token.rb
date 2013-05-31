@@ -2,7 +2,7 @@ require 'active_support/core_ext/object/blank'
 
 module Oauth2Server
   module BearerToken
-    module TokenBuilder
+    module Builder
       class RefreshToken < Base
         def token
           Entities::Token.new(
